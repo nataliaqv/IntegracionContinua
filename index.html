@@ -4,19 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
-    </div>
-    <script src="script.js"></script>
+    <nav class="navbar">
+        <a class="active" href="./index.html">Login</a>
+        <a href="./register.html">Register</a>
+    </nav>
+    <section class="container">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="input-container">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </section>
+    <script src="./script.js"></script>
 </body>
 </html>
