@@ -15,20 +15,3 @@ ENV SA_PASSWORD=%ZoporTe*2023
 
 # Expose SQL Server port
 EXPOSE 1433
-
-#docker exec -it sql-server-image:latest powershell
-#docker exec -it nombre_del_contenedor bash
-#docker exec -it intelligent_haslett bash
-#docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" sql
-#docker port intelligent_haslett
-#docker inspect -f '{{range $p, $conf := .NetworkSettings.Ports}}{{$p}}{{end}}' intelligent_haslett
-#docker port intelligent_haslett 1433/tcp
-
-#172.17.0.2
-# Instalar sqlcmd
-# apt-get update
-
-
-#sqlcmd -S l172.17.0.2 -U SA -P %ZoporTe*2023
-
-#sqlcmd -S 127.0.0.1,1433 -U SA -P "%ZoporTe*2023"

@@ -1,34 +1,45 @@
 # Use the SQL Server 2019 image from Microsoft
 FROM mcr.microsoft.com/mssql/server:2019-latest
 
-# Install sqlcmd
+# Install necessary packages
 USER root
-RUN apt-get update && apt-get install -y mssql-tools unixodbc-dev
+RUN apt-get update && apt-get install -y mssql-tools unixodbc-dev nginx openssl
 ENV PATH="$PATH:/opt/mssql-tools/bin"
 
-# Switch back to the mssql user
-USER mssql
-
-# Set environment variables
+# Set environment variables for SQL Server
 ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=%ZoporTe*2023
 
 # Expose SQL Server port
 EXPOSE 1432
 
-#docker exec -it sql-server-image:latest powershell
-#docker exec -it nombre_del_contenedor bash
-#docker exec -it intelligent_haslett bash
-#docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" sql
-#docker port intelligent_haslett
-#docker inspect -f '{{range $p, $conf := .NetworkSettings.Ports}}{{$p}}{{end}}' intelligent_haslett
-#docker port intelligent_haslett 1433/tcp
+# Create directories for Nginx and SSL
+RUN mkdir -p /etc/nginx/ssl /var/www/html
 
-#172.17.0.2
-# Instalar sqlcmd
-# apt-get update
+# Copy the HTML files to the container
+COPY index.html /var/www/html/index.html
+COPY register.html /var/www/html/register.html
 
+# Generate self-signed SSL certificates
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/nginx/ssl/nginx.key \
+  -out /etc/nginx/ssl/nginx.crt \
+  -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"
 
-#sqlcmd -S l172.17.0.2 -U SA -P %ZoporTe*2023
+# Configure Nginx for HTTPS
+RUN echo 'server {' > /etc/nginx/sites-available/default && \
+    echo '    listen 443 ssl;' >> /etc/nginx/sites-available/default && \
+    echo '    server_name localhost;' >> /etc/nginx/sites-available/default && \
+    echo '    ssl_certificate /etc/nginx/ssl/nginx.crt;' >> /etc/nginx/sites-available/default && \
+    echo '    ssl_certificate_key /etc/nginx/ssl/nginx.key;' >> /etc/nginx/sites-available/default && \
+    echo '    location / {' >> /etc/nginx/sites-available/default && \
+    echo '        root /var/www/html;' >> /etc/nginx/sites-available/default && \
+    echo '        index index.html register.html;' >> /etc/nginx/sites-available/default && \
+    echo '    }' >> /etc/nginx/sites-available/default && \
+    echo '}' >> /etc/nginx/sites-available/default
 
-#sqlcmd -S 127.0.0.1,1433 -U SA -P "%ZoporTe*2023"
+# Expose Nginx port
+EXPOSE 443
+
+# Start SQL Server and Nginx
+CMD /bin/bash -c "/opt/mssql/bin/sqlservr & nginx -g 'daemon off;'"
