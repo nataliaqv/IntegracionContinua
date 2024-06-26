@@ -1,0 +1,24 @@
+pipeline {
+   agent { label 'SQL' } // Ejecutar en cualquier agente disponible en Jenkins
+
+    stages {
+        stage('Print Node IP') {
+            steps {
+                script {
+                    def nodeIp = sh(script: 'hostname -I', returnStdout: true).trim()
+                    echo "La dirección IP del nodo es: ${nodeIp}"
+                    
+                     // Ejecutar el comando sqlcmd
+                    def command = "/opt/mssql-tools/bin/sqlcmd -S 172.17.0.3 -U SA -P '%ZoporTe*2023'"
+                    def result = sh(script: command, returnStatus: true)
+
+                    if (result == 0) {
+                        echo "Comando SQL ejecutado exitosamente"
+                    } else {
+                        error "Error al ejecutar el comando SQL"
+                    }
+                }
+            }
+        }
+    }
+}

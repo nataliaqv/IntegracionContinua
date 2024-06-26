@@ -26,3 +26,6 @@
 7# Validar conexion  COmando sql server de prueba 
 select * from MyTable;
 go
+
+
+ssh-keyscan -H 172.17.0.3 >> /root/.ssh/known_hosts

@@ -1,0 +1,29 @@
+pipeline {
+       agent { label 'FRONT' }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clonar el repositorio desde Git usando credenciales de Jenkins y especificando la rama 'main'
+                git credentialsId: 'mi-credencial-git', url: 'https://github.com/nataliaqv/IntegracionContinua.git', branch: 'main'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Compilar el proyecto usando Maven
+                sh 'ls'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Ejecutar pruebas unitarias
+         
+                sh 'cp register.html /var/www/html/register.html'
+            }
+        }
+
+       
+    }
+}
